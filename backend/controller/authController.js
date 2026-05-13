@@ -5,14 +5,14 @@ import mongoose from "mongoose";
 export const signup = async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) {
-    return res.status(400).json({ message: "Username and password required" });
+    return res.status(400).json({ error: "Username and password required" });
   }
   const existing = await User.findOne({ username });
   if (existing) {
-    return res.status(409).json({ message: "Username taken" });
+    return res.status(409).json({ error: "Username taken" });
   }
   const hashed = await bcrypt.hash(password, 10);
-  const newUser = await User.createe({ username, password: hashed });
+  const newUser = await User.create({ username, password: hashed });
   res.status(201).json({
     _id: newUser._id,
     username: newUser.username,
@@ -24,15 +24,15 @@ export const login = async (req, res) => {
   if (!username || !password) {
     return res
       .status(400)
-      .json({ message: "Username and Password are required" });
+      .json({ error: "Username and Password are required" });
   }
   const user = await User.findOne({ username });
   if (!user) {
-    return res.status(404).json({ message: "User not found" });
+    return res.status(404).json({ error: "User not found" });
   }
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    return res.status(401).json({ message: "Invalid password" });
+    return res.status(401).json({ error: "Invalid password" });
   }
   req.session.userId = user._id
   res.status(200).json({

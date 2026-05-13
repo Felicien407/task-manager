@@ -1,10 +1,12 @@
 import express from "express";
 import cors from "cors";
-import taskRouter from "./routes/tasks.js";
-import authRouter from "./routes/auth.js";
 import { connectDB } from "./config/db.js";
 import session from "express-session";
 import MongoStore from "connect-mongo";
+
+import taskRouter from "./routes/tasks.js";
+import authRouter from "./routes/auth.js";
+import reportRouter from "./routes/report.js"
 
 const app = express();
 
@@ -13,6 +15,7 @@ app.use(cors());
 
 app.use("/api/tasks", taskRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/report", reportRouter);
 
 app.use(
   session({
